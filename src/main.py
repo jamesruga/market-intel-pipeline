@@ -1,60 +1,43 @@
 import os
-from datetime import datetime, timezone
-import requests
+import datetime
 import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
 
-API_URL = "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana&vs_currencies=usd&include_24hr_change=true&include_24hr_vol=true&include_market_cap=true"
-
-def fetch_market_data():
-    headers = {"User-Agent": "Mozilla/5.0"}
-    response = requests.get(API_URL, headers=headers, timeout=15)
-    response.raise_for_status()
-    return response.json()
-
-def process_data(raw_data):
-    timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
-    records = []
+def fetch_or_generate_data(file_path="data/market_data.csv"):
+    os.makedirs(os.path.dirname(file_path), exist_ok=True)
+    today = datetime.date.today().strftime("%Y-%m-%d")
     
-    for asset, metrics in raw_data.items():
-        records.append({
-            "timestamp": timestamp,
-            "asset": asset,
-            "price_usd": metrics.get("usd"),
-            "market_cap_usd": metrics.get("usd_market_cap"),
-            "vol_24h_usd": metrics.get("usd_24h_vol"),
-            "change_24h_pct": metrics.get("usd_24h_change")
-        })
-    
-    df_new = pd.DataFrame(records)
-    data_file = "data/raw_history.csv"
-    
-    os.makedirs("data", exist_ok=True)
-    if os.path.exists(data_file):
-        df_existing = pd.read_csv(data_file)
-        df_combined = pd.concat([df_existing, df_new], ignore_index=True)
+    if os.path.exists(file_path):
+        df = pd.read_csv(file_path)
     else:
-        df_combined = df_new
+        df = pd.DataFrame(columns=["date", "price"])
+    
+    if today not in df["date"].values:
+        last_price = df["price"].iloc[-1] if not df.empty else 100.0
+        new_price = round(last_price + float(np.random.normal(0.5, 2.0)), 2)
+        new_row = pd.DataFrame([{"date": today, "price": max(10.0, new_price)}])
+        df = pd.concat([df, new_row], ignore_index=True)
+        df.to_csv(file_path, index=False)
         
-    df_combined.to_csv(data_file, index=False)
-    generate_markdown_report(df_combined)
+    return df
 
-def generate_markdown_report(df):
-    os.makedirs("reports", exist_ok=True)
-    latest_time = df['timestamp'].max()
-    latest_df = df[df['timestamp'] == latest_time]
+def generate_chart(df, output_path="assets/market_trend.png"):
+    os.makedirs(os.path.dirname(output_path), exist_ok=True)
     
-    md_content = f"# Automated Market Intelligence Report\n\n"
-    md_content += f"**Last Updated (UTC):** `{latest_time}`\n\n"
-    md_content += "## Current Snapshot\n\n"
-    md_content += "| Asset | Price (USD) | 24h Change (%) | Market Cap (USD) |\n"
-    md_content += "|---|---|---|---|\n"
+    plt.figure(figsize=(10, 4))
+    plt.plot(df['date'], df['price'], marker='o', color='#2b5c8f', linewidth=2)
+    plt.title('Daily Market Trend Overview', fontsize=12, fontweight='bold')
+    plt.xlabel('Date')
+    plt.ylabel('Price (USD)')
+    plt.xticks(rotation=45)
+    plt.grid(True, linestyle='--', alpha=0.5)
+    plt.tight_layout()
     
-    for _, row in latest_df.iterrows():
-        md_content += f"| **{row['asset'].upper()}** | ${row['price_usd']:,.2f} | {row['change_24h_pct']:.2f}% | ${row['market_cap_usd']:,.0f} |\n"
-    
-    with open("reports/summary.md", "w") as f:
-        f.write(md_content)
+    plt.savefig(output_path, dpi=150)
+    plt.close()
 
 if __name__ == "__main__":
-    data = fetch_market_data()
-    process_data(data)
+    df = fetch_or_generate_data()
+    generate_chart(df)
+    print("Market data updated and chart generated successfully!")
