@@ -6,12 +6,14 @@ on:
   workflow_dispatch:
 
 jobs:
-  run-pipeline:
+  build-and-run:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -23,13 +25,12 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Execute Pipeline
+      - name: Run Market Data & Chart Script
         run: python src/main.py
 
-      - name: Commit & Push Changes
+      - name: Commit and Push Updates
         run: |
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          git add data/raw_history.csv reports/summary.md
-          git commit -m "chore(data): auto-update daily metrics [skip ci]" || exit 0
-          git push
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/ assets/
+          git diff --quiet && git diff --staged --quiet || (git commit -m "auto: update market data and chart visual" && git push)
