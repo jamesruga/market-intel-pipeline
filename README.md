@@ -4,6 +4,6 @@ Automated market data collection, tracking, and visualization pipeline powered b
 
 ## Live Market Visuals
 
-![Daily Market Trend](assets/market_trend.png)
+![Daily Market Trend](./assets/market_trend.png)
 
 *Updated automatically via daily GitHub Actions cloud execution.*
