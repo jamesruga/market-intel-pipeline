@@ -2,7 +2,7 @@ name: Daily Market Data Pipeline
 
 on:
   schedule:
-    - cron: '0 0 * * *'
+    - cron: '0 21 * * *'
   push:
     branches:
       - main
@@ -33,7 +33,7 @@ jobs:
 
       - name: Commit and Push Updates
         run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "jamesruga"
+          git config --global user.email "jamesruga07@gmail.com"
           git add -A
           git diff --quiet && git diff --staged --quiet || (git commit -m "auto: update market data and chart visual" && git push)
