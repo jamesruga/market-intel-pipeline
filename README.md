@@ -16,6 +16,14 @@ Below is the automatically generated daily visualization updated by the headless
 
 > **Automated System Notice:** This visualization is regenerated daily at **00:00 EAT (21:00 UTC)** without human intervention.
 
+### 📥 Data Source & Interpretation
+
+* **Data Provider:** Public Market Data API (e.g., Yahoo Finance / CoinGecko)
+* **Tracked Metrics:** Daily closing prices and trading volume for benchmark assets.
+* **X-Axis (Timeline):** Sequential execution dates over the active tracking period.
+* **Y-Axis (Price/Value):** Normalized market closing prices in USD.
+* **Trend Indicators:** The main plot line tracks daily price trajectory, highlighting market direction, volatility spikes, and moving averages.
+
 ---
 
 ## 🏗 System Architecture
@@ -43,7 +51,7 @@ The pipeline operates on an automated CI/CD loop execution model:
               ▼                               ▼
   ┌────────────────────────┐      ┌────────────────────────┐
   │ Authenticated Git Commit◄──────┤ Update Data Ledger &   │
-  │ (Fine-Grained PAT Scope)│      │ Save assets/market_trend.png  │
+  │ (Fine-Grained PAT Scope)│      │ Save market_trend.png  │
   └───────────┬────────────┘      └───────────┬────────────┘
               │
               ▼
@@ -82,7 +90,8 @@ market-intel-pipeline/
 ├── src/
 │   └── main.py                   # Ingestion, state updating, & visualization script
 ├── data/                         # Historical data storage
-├── assets/market_trend.png              # Output chart asset embedded in README
+├── assets/
+│   └── market_trend.png          # Output chart asset embedded in README
 ├── requirements.txt              # Environment dependencies
 └── README.md                     # Pipeline documentation & status dashboard
 ```
