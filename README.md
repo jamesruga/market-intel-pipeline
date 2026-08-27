@@ -12,7 +12,7 @@ An automated, serverless data pipeline that ingests daily market data, updates h
 
 Below is the automatically generated daily visualization updated by the headless GitHub Actions runner.
 
-![Market Trend Visual](./market_trend.png)
+![Market Trend Visual](market_trend.png)
 
 > **Automated System Notice:** This visualization is regenerated daily at **00:00 EAT (21:00 UTC)** without human intervention.
 
@@ -50,7 +50,7 @@ The pipeline operates on an automated CI/CD loop execution model:
   ┌────────────────────────┐
   │ Push to main Branch    │
   │ (Render on README.md)  │
-  └────────────────────────┘
+  └───────────┬────────────┘
 ```
 
 ---
@@ -59,7 +59,6 @@ The pipeline operates on an automated CI/CD loop execution model:
 
 * **Serverless Automation:** Scheduled cron workflow (`0 21 * * *` UTC) handles all ingestion, processing, and output generation in the cloud.
 * **DevSecOps Standard Compliance:** Authenticated via fine-grained Personal Access Tokens (PATs) restricted to explicit repository scope (`contents: write`, `workflows: write`).
-* **Contribution Calendar Attribution:** Custom Git user attribution ensures workflow commits are properly registered on the developer's GitHub contribution grid.
 * **Lightweight CLI Execution:** Fully developed and configured out of a mobile CLI environment (Termux) and target-deployed to cloud Linux runners (`ubuntu-latest`).
 
 ---
