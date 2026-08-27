@@ -12,7 +12,7 @@ An automated, serverless data pipeline that ingests daily market data, updates h
 
 Below is the automatically generated daily visualization updated by the headless GitHub Actions runner.
 
-![Market Trend Visual](market_trend.png)
+![Market Trend Visual](assets/market_trend.png)
 
 > **Automated System Notice:** This visualization is regenerated daily at **00:00 EAT (21:00 UTC)** without human intervention.
 
@@ -43,7 +43,7 @@ The pipeline operates on an automated CI/CD loop execution model:
               ▼                               ▼
   ┌────────────────────────┐      ┌────────────────────────┐
   │ Authenticated Git Commit◄──────┤ Update Data Ledger &   │
-  │ (Fine-Grained PAT Scope)│      │ Save market_trend.png  │
+  │ (Fine-Grained PAT Scope)│      │ Save assets/market_trend.png  │
   └───────────┬────────────┘      └───────────┬────────────┘
               │
               ▼
@@ -82,7 +82,7 @@ market-intel-pipeline/
 ├── src/
 │   └── main.py                   # Ingestion, state updating, & visualization script
 ├── data/                         # Historical data storage
-├── market_trend.png              # Output chart asset embedded in README
+├── assets/market_trend.png              # Output chart asset embedded in README
 ├── requirements.txt              # Environment dependencies
 └── README.md                     # Pipeline documentation & status dashboard
 ```
